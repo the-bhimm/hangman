@@ -140,6 +140,6 @@ def main():
 
 
 
-print(word)
+print(word) #for testing purposes so I can get a victory
 main()
 pygame.quit()
