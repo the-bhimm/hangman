@@ -90,6 +90,13 @@ def play_again():
     text = WORD_FONT.render("Click here to play again", 1, BLACK)
     win.blit(text, (WIDTH / 2 - text.get_width() / 2, HEIGHT / 2 - text.get_height() / 2))
     pygame.display.update()
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            print("click")
+            #will add code here that resets the game loop and variables
+        else:
+            print("no click")
+            play = False
     pygame.time.delay(5000)
 
 
