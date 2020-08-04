@@ -76,15 +76,6 @@ def draw():
     win.blit(images[hangman_status], (150, 100))
     pygame.display.update()
 
-def reset():
-    global hangman_status
-    global guessed
-    global word
-    hangman_status = 0
-    guessed = []
-    word = random.choice(wordlist)
-
-
 def display_message(message):
     win.fill(WHITE)
     text = WORD_FONT.render(message, 1, BLACK)
