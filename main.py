@@ -139,7 +139,10 @@ def main():
             break
 
 
-
-print(word) #for testing purposes so I can get a victory
-main()
-pygame.quit()
+play = True
+while play:
+    print(word) #for testing purposes so I can get a victory
+    main()
+else:
+    print("Play is now false")
+    pygame.quit()
