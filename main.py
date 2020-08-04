@@ -138,7 +138,7 @@ def main():
             play_again()
             break
 
-
+#I've started a while loop here with the intention of being able to change play=False and close the game within main()
 play = True
 while play:
     print(word) #for testing purposes so I can get a victory
