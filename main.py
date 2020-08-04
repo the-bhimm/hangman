@@ -11,7 +11,7 @@ pygame.display.set_caption("Hangman")
 #Load in the images.
 images = []
 for i in range(12):
-    image = pygame.image.load("assets/hangman"+str(i) + ".png")
+    image = pygame.image.load("hangman"+str(i) + ".png")
     images.append(image)
 
 #Create the buttons.
