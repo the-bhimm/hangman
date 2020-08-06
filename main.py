@@ -46,10 +46,21 @@ ROUND  = 1
 BLACK = 0, 0, 0
 WHITE = 255, 255, 255
 
+file = open("highscore.txt", "r")
+HIGH_SCORE = file.read()
+
 # -----------------------------------------
 #               FUNCTIONS
 # -----------------------------------------
 
+
+def high_score(new_high):
+    global HIGH_SCORE
+    file = open("highscore.txt", "r")
+    HIGH_SCORE = file.read()
+    if int(HIGH_SCORE) < SCORE:
+        file = open("highscore.txt", "w")
+        file.write(str(new_high))
 
 def random_word():
     file = open("wordlist.txt", "r")
@@ -147,6 +158,7 @@ def reset():
     guessed = []
     hangman_status = 0
     word = random_word()
+    high_score(SCORE)
     draw()
 
 
