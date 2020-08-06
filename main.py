@@ -40,6 +40,8 @@ hangman_status = 0
 guessed = []
 SCORE = 0
 GUESS_REMAIN = 11
+ROUND  = 1
+
 # Colours
 BLACK = 0, 0, 0
 WHITE = 255, 255, 255
@@ -66,10 +68,12 @@ word = random_word()
 def draw():
     win.fill(WHITE)
     # Draw title
+    text4 = SMALL_FONT.render(f"Round: {ROUND}", 1, BLACK)
+    win.blit(text4, (650, 5))
     text2 = SMALL_FONT.render(f"Score: {SCORE}", 1, BLACK)
-    win.blit(text2, (40, 15))
+    win.blit(text2, (650, 30))
     text3 = SMALL_FONT.render(f"Lives: {GUESS_REMAIN}", 1, BLACK)
-    win.blit(text3, (40, 35))
+    win.blit(text3, (70, 20))
     text = TITLE_FONT.render("Noah's Hangman", 1, BLACK)
     win.blit(text, (WIDTH/2 - text.get_width()/2, 10))
     # Draw word
@@ -121,6 +125,8 @@ def reset():
     global guessed
     global letters
     global GUESS_REMAIN
+    global ROUND
+    ROUND += 1
     RADIUS = 20
     GAP = 15
     letters = []
