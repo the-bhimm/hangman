@@ -2,19 +2,22 @@ import pygame
 import math
 import random
 
-#Set up the game window.
+# Set up the game window.
 pygame.init()
 WIDTH, HEIGHT = 800, 500
 win = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Hangman")
 
-#Load in the images.
+# -----------------------------------------
+#            GLOBAL VARIABLES
+# -----------------------------------------
+# Load in the images.
 images = []
 for i in range(12):
-    image = pygame.image.load("hangman"+str(i) + ".png")
+    image = pygame.image.load("assets/hangman"+str(i) + ".png")
     images.append(image)
 
-#Create the buttons.
+# Create the buttons.
 RADIUS = 20
 GAP = 15
 letters = []
@@ -22,40 +25,54 @@ startx = round((WIDTH - (RADIUS * 2 + GAP) * 13) / 2)
 starty = 400
 A = 65
 for i in range(26):
-    x = startx + GAP * 2 + ((RADIUS * 2 + GAP) * (i%13))
+    x = startx + GAP * 2 + ((RADIUS * 2 + GAP) * (i % 13))
     y = starty + ((i // 13) * (GAP + RADIUS * 2))
     letters.append([x, y, chr(A+i), True])
 
-#Fonts
+# Fonts
 LETTER_FONT = pygame.font.SysFont("comicsans", 40)
 WORD_FONT = pygame.font.SysFont("comicsans", 60)
 TITLE_FONT = pygame.font.SysFont("comicsans", 70)
 SMALL_FONT = pygame.font.SysFont("comicsans", 30)
 
-#Game variables.
+# Game variables.
 hangman_status = 0
-file = open("wordlist.txt", "r")
-lines = file.readlines()
-wordlist = []
-for i in lines:
-    i = i.strip("\n").upper()
-    wordlist.append(i)
-word = random.choice(wordlist)
 guessed = []
-
-#Colours
+SCORE = 0
+GUESS_REMAIN = 11
+# Colours
 BLACK = 0, 0, 0
 WHITE = 255, 255, 255
+
+# -----------------------------------------
+#               FUNCTIONS
+# -----------------------------------------
+
+
+def random_word():
+    file = open("wordlist.txt", "r")
+    lines = file.readlines()
+    wordlist = []
+    for i in lines:
+        i = i.strip("\n").upper()
+        wordlist.append(i)
+    i = random.choice(wordlist)
+    return i
+
+
+word = random_word()
 
 
 def draw():
     win.fill(WHITE)
-    #Draw title
+    # Draw title
+    text2 = SMALL_FONT.render(f"Score: {SCORE}", 1, BLACK)
+    win.blit(text2, (40, 15))
+    text3 = SMALL_FONT.render(f"Lives: {GUESS_REMAIN}", 1, BLACK)
+    win.blit(text3, (40, 35))
     text = TITLE_FONT.render("Noah's Hangman", 1, BLACK)
     win.blit(text, (WIDTH/2 - text.get_width()/2, 10))
-
-
-    #Draw word
+    # Draw word
     display_word = ""
     for letter in word:
         if letter in guessed:
@@ -64,52 +81,92 @@ def draw():
             display_word += "_ "
     text = WORD_FONT.render(display_word, 1, BLACK)
     win.blit(text, (400, 200))
-
-    #Draw buttons
+    # Draw buttons
     for letter in letters:
         x, y, ltr, visible = letter
         if visible:
-            pygame.draw.circle(win, BLACK, (x,y), RADIUS, 3)
+            pygame.draw.circle(win, BLACK, (x, y), RADIUS, 3)
             text = LETTER_FONT.render(ltr, 1, BLACK)
-            win.blit(text, (x - text.get_width()/2,y - text.get_height()/2))
+            win.blit(text, (x - text.get_width()/2, y - text.get_height()/2))
 
     win.blit(images[hangman_status], (150, 100))
     pygame.display.update()
 
+
 def display_message(message):
+    global word
     win.fill(WHITE)
     text = WORD_FONT.render(message, 1, BLACK)
     win.blit(text, (WIDTH / 2 - text.get_width() / 2, HEIGHT / 2 - text.get_height() / 2))
+    if hangman_status == 11:
+        answer = word
+        word = WORD_FONT.render(f"The answer was {answer}", 1, BLACK)
+        win.blit(word, (WIDTH / 2 - word.get_width() / 2, 400))
     pygame.display.update()
     pygame.time.delay(3000)
 
+
 def play_again():
     win.fill(WHITE)
-    text2 = SMALL_FONT.render("Window will close automatically if nothing is pressed", 1, BLACK)
+    text2 = SMALL_FONT.render(f"Score: {SCORE}", 1, BLACK)
     win.blit(text2, (WIDTH / 2 - text2.get_width() / 2, 30))
-    text = WORD_FONT.render("Click here to play again", 1, BLACK)
+    text = WORD_FONT.render("Would you like to continue?(y/n)", 1, BLACK)
     win.blit(text, (WIDTH / 2 - text.get_width() / 2, HEIGHT / 2 - text.get_height() / 2))
     pygame.display.update()
-    for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            print("click")
-            #will add code here that resets the game loop and variables
-        else:
-            print("no click")
-            play = False
-    pygame.time.delay(5000)
+
+
+def reset():
+    global word
+    global hangman_status
+    global guessed
+    global letters
+    global GUESS_REMAIN
+    RADIUS = 20
+    GAP = 15
+    letters = []
+    startx = round((WIDTH - (RADIUS * 2 + GAP) * 13) / 2)
+    starty = 400
+    A = 65
+    for i in range(26):
+        x = startx + GAP * 2 + ((RADIUS * 2 + GAP) * (i % 13))
+        y = starty + ((i // 13) * (GAP + RADIUS * 2))
+        letters.append([x, y, chr(A + i), True])
+    for letter in letters:
+        x, y, ltr, visible = letter
+        if visible:
+            pygame.draw.circle(win, BLACK, (x, y), RADIUS, 3)
+            text = LETTER_FONT.render(ltr, 1, BLACK)
+            win.blit(text, (x - text.get_width()/2, y - text.get_height()/2))
+    GUESS_REMAIN = 11
+    guessed = []
+    hangman_status = 0
+    word = random_word()
+    draw()
+
+
+def check_pressed():
+    global play
+    events = pygame.event.get()
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_y:
+                reset()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_n:
+                    play = False
 
 
 def main():
     global hangman_status
     global play
-
-    FPS = 144
+    global SCORE
+    global GUESS_REMAIN
+    fps = 144
     clock = pygame.time.Clock()
     run = True
 
     while run:
-        clock.tick(FPS)
+        clock.tick(fps)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -125,6 +182,7 @@ def main():
                             guessed.append(ltr)
                             if ltr not in word:
                                 hangman_status += 1
+                                GUESS_REMAIN -= 1
 
         draw()
 
@@ -134,22 +192,26 @@ def main():
                 won = False
                 break
         if won:
+            SCORE += 1
             pygame.time.delay(1000)
             display_message("You won!")
             play_again()
+            pygame.time.delay(5000)
+            check_pressed()
             break
 
         if hangman_status == 11:
             pygame.time.delay(1000)
             display_message("You lost!")
             play_again()
+            pygame.time.delay(5000)
+            check_pressed()
             break
 
-#I've started a while loop here with the intention of being able to change play=False and close the game within main()
+
 play = True
 while play:
-    print(word) #for testing purposes so I can get a victory
     main()
 else:
-    print("Play is now false")
     pygame.quit()
+
