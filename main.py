@@ -53,7 +53,8 @@ HIGH_SCORE = file.read()
 #               FUNCTIONS
 # -----------------------------------------
 
-
+# This is definitely not the best way to find the high score but I was experimenting with new techniques
+# I'd learned and it works so I don't feel a need to change it now
 def high_score(new_high):
     global HIGH_SCORE
     file = open("highscore.txt", "r")
