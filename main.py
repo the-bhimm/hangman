@@ -170,9 +170,13 @@ def check_pressed():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_y:
                 reset()
-            if event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_n:
+                    high_score(SCORE)
                     play = False
+    if pygame.time.delay(5000):
+        pygame.quit()
+      
 
 
 def main():
